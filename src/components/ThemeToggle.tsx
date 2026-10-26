@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
-import { Sun, Moon } from "lucide-react";
+import { SunIcon, MoonIcon } from "@needui/ui-kit";
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
@@ -65,14 +65,16 @@ export default function ThemeToggle() {
       ref={btnRef}
       onClick={toggleTheme}
       aria-label="Toggle Dark Mode"
-      className="w-10 h-10 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition-colors active:scale-95 cursor-pointer focus:outline-none flex items-center justify-center p-0"
+      className="w-10 h-10 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/80 dark:hover:bg-neutral-800/60 transition-colors active:scale-95 cursor-pointer outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-500 flex items-center justify-center p-0"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {isDark ? (
-        <Sun size={18} strokeWidth={2} className="text-amber-400 transition-transform duration-300 hover:rotate-45" />
-      ) : (
-        <Moon size={18} strokeWidth={2} className="text-neutral-700 transition-transform duration-300 hover:-rotate-12" />
-      )}
+      <span className="flex items-center justify-center pointer-events-none transition-transform duration-200 group-hover:scale-110">
+        {isDark ? (
+          <SunIcon size={18} className="text-amber-400 transition-transform duration-300 hover:rotate-45" />
+        ) : (
+          <MoonIcon size={18} className="text-neutral-700 transition-transform duration-300 hover:-rotate-12" />
+        )}
+      </span>
     </button>
   );
 }

@@ -13,26 +13,16 @@ import {
 } from "lucide-react";
 
 export default function AboutTab() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (containerRef.current) {
-      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-      tl.fromTo(
-        containerRef.current,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.35 }
-      ).fromTo(
-        ".timeline-item",
-        { opacity: 0, x: -10 },
-        { opacity: 1, x: 0, stagger: 0.08, duration: 0.35 },
-        "-=0.15"
-      );
-    }
+    gsap.fromTo(
+      ".timeline-item",
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, stagger: 0.08, duration: 0.35, ease: "power2.out" }
+    );
   }, []);
 
   return (
-    <div ref={containerRef} className="space-y-10 sm:space-y-12">
+    <div className="space-y-10 sm:space-y-12">
       {/* Intro */}
       <div className="space-y-4">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 font-mono">

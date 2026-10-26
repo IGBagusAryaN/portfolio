@@ -1,169 +1,130 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import Rocket from "@/components/Rocket";
+import { useState } from "react";
+import {
+  Mail,
+  Linkedin,
+  Github,
+  Instagram,
+  Copy,
+  Check,
+  ArrowUpRight,
+} from "lucide-react";
+
+interface SocialLink {
+  name: string;
+  handle: string;
+  href: string;
+  icon: JSX.Element;
+  isEmail?: boolean;
+}
 
 export default function ContactTab() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
-
   const emailAddress = "gede.arya.negara@gmail.com";
 
-  useEffect(() => {
-    if (containerRef.current) {
-      gsap.fromTo(
-        containerRef.current,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
-      );
-    }
-  }, []);
-
-  const handleCopyEmail = () => {
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     navigator.clipboard.writeText(emailAddress);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formState.email || !formState.message) return;
-    setSubmitted(true);
-  };
+  const SOCIAL_LINKS: SocialLink[] = [
+    {
+      name: "Email",
+      handle: emailAddress,
+      href: `mailto:${emailAddress}`,
+      isEmail: true,
+      icon: <Mail size={18} />,
+    },
+    {
+      name: "Spotify",
+      handle: "Music & Playlists",
+      href: "https://open.spotify.com",
+      icon: (
+        <svg className="w-[18px] h-[18px] fill-current" viewBox="0 0 24 24">
+          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+        </svg>
+      ),
+    },
+    {
+      name: "LinkedIn",
+      handle: "I Gede Bagus Arya Negara",
+      href: "https://linkedin.com",
+      icon: <Linkedin size={18} />,
+    },
+    {
+      name: "GitHub",
+      handle: "@IGBagusAryaN",
+      href: "https://github.com",
+      icon: <Github size={18} />,
+    },
+    {
+      name: "Instagram",
+      handle: "@arya",
+      href: "https://instagram.com",
+      icon: <Instagram size={18} />,
+    },
+  ];
 
   return (
-    <div ref={containerRef} className="space-y-12">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="space-y-3">
-        <span className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          Currently open for collaboration & opportunities
-        </span>
+      <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 font-mono">
-          Let's Start a Conversation
+          Contact & Socials
         </h2>
-        <p className="text-sm sm:text-base text-notion-muted dark:text-notion-darkMuted leading-relaxed max-w-xl">
-          Whether you have a question, an opportunity in Frontend or Fullstack development, or simply want to say hello, my inbox is always open!
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+          Feel free to reach out or connect through any of the platforms below.
         </p>
       </div>
 
-      {/* Main Grid: Contact Card + Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-        {/* Left Form: 3 cols */}
-        <div className="md:col-span-3 space-y-6 rounded-2xl border border-notion-border dark:border-notion-darkBorder bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm p-6 sm:p-8 shadow-sm">
-          {submitted ? (
-            <div className="py-12 text-center space-y-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto text-lg font-bold">
-                ✓
+      {/* Clean Minimalist Buttons List */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {SOCIAL_LINKS.map((item) => (
+          <a
+            key={item.name}
+            href={item.href}
+            target={item.isEmail ? undefined : "_blank"}
+            rel={item.isEmail ? undefined : "noopener noreferrer"}
+            className="group flex items-center justify-between p-4 rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/50 hover:bg-neutral-100/90 dark:hover:bg-neutral-800/70 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-200 cursor-pointer shadow-sm"
+          >
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200/60 dark:border-neutral-700/60 flex items-center justify-center text-neutral-700 dark:text-neutral-300 shrink-0 group-hover:scale-105 transition-transform duration-200">
+                {item.icon}
               </div>
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 font-mono">
-                Message Received!
-              </h3>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-xs mx-auto">
-                Thank you for reaching out! I will get back to you at <span className="font-mono text-neutral-700 dark:text-neutral-300">{formState.email}</span> as soon as possible.
-              </p>
-              <button
-                onClick={() => {
-                  setSubmitted(false);
-                  setFormState({ name: "", email: "", message: "" });
-                }}
-                className="mt-2 text-xs font-mono text-neutral-500 underline hover:text-black dark:hover:text-white"
-              >
-                Send another message
-              </button>
+              <div className="min-w-0 text-left">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 font-mono">
+                  {item.name}
+                </p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate font-mono">
+                  {item.handle}
+                </p>
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Alex"
-                  value={formState.name}
-                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-notion-border dark:border-notion-darkBorder bg-white/50 dark:bg-neutral-950/50 text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-200 transition-colors placeholder:text-neutral-400"
-                />
+
+            <div className="flex items-center gap-2 pl-3 shrink-0">
+              {item.isEmail && (
+                <button
+                  onClick={handleCopyEmail}
+                  title="Copy email address"
+                  className="p-1.5 rounded-md text-xs font-mono border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60 text-neutral-600 dark:text-neutral-400 transition-colors"
+                >
+                  {copied ? (
+                    <Check size={14} className="text-emerald-500" />
+                  ) : (
+                    <Copy size={14} />
+                  )}
+                </button>
+              )}
+              <div className="text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">
+                <ArrowUpRight size={18} />
               </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  value={formState.email}
-                  onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-notion-border dark:border-notion-darkBorder bg-white/50 dark:bg-neutral-950/50 text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-200 transition-colors placeholder:text-neutral-400"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="Tell me about your project, idea, or role..."
-                  value={formState.message}
-                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-notion-border dark:border-notion-darkBorder bg-white/50 dark:bg-neutral-950/50 text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-200 transition-colors placeholder:text-neutral-400 resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 rounded-lg text-xs sm:text-sm font-mono font-medium text-white dark:text-neutral-900 bg-neutral-900 dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all duration-200 active:scale-[0.98] shadow-sm flex items-center justify-center gap-2"
-              >
-                <span>Send Message</span>
-                <span>↗</span>
-              </button>
-            </form>
-          )}
-        </div>
-
-        {/* Right Info: 2 cols */}
-        <div className="md:col-span-2 space-y-6">
-          {/* Direct Email Card */}
-          <div className="rounded-2xl border border-notion-border dark:border-notion-darkBorder bg-white/50 dark:bg-neutral-900/50 p-6 space-y-3">
-            <span className="text-xs font-mono text-neutral-400 dark:text-neutral-500">
-              Direct Email
-            </span>
-            <p className="text-sm font-mono font-medium text-neutral-900 dark:text-neutral-100 break-all select-all">
-              {emailAddress}
-            </p>
-            <div className="flex items-center gap-2 pt-1">
-              <button
-                onClick={handleCopyEmail}
-                className="px-3 py-1.5 rounded-md text-xs font-mono border border-notion-border dark:border-notion-darkBorder hover:border-neutral-500 dark:hover:border-neutral-400 transition-all active:scale-95 text-neutral-700 dark:text-neutral-300"
-              >
-                {copied ? "Copied! ✓" : "Copy Email"}
-              </button>
-              <a
-                href={`mailto:${emailAddress}`}
-                className="px-3 py-1.5 rounded-md text-xs font-mono bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:opacity-90 transition-opacity"
-              >
-                Mail App ↗
-              </a>
             </div>
-          </div>
-
-          {/* Line-art Rocket Visual in Card */}
-          <div className="rounded-2xl border border-notion-border dark:border-notion-darkBorder bg-white/50 dark:bg-neutral-900/50 p-6 flex flex-col items-center justify-center text-center space-y-3">
-            <Rocket />
-            <p className="text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
-              Interactive Rocket • Click for liftoff
-            </p>
-          </div>
-        </div>
+          </a>
+        ))}
       </div>
     </div>
   );

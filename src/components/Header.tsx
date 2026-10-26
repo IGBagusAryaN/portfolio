@@ -61,7 +61,7 @@ export default function Header() {
               src="/arya-avatar.jpg"
               alt="I Gede Bagus Arya Negara"
               width={200}
-              height={200}
+              height={90}
               quality={100}
               priority
               className="w-full h-full object-cover object-center"

@@ -80,22 +80,21 @@ export default function PortfolioTab() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedProjectId]);
 
-  // Entrance animation for List View
+  const isFirstMountRef = useRef(true);
+
+  // Entrance animation for List View (when returning from detail)
   useEffect(() => {
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+
     if (!selectedProjectId && listViewRef.current) {
       gsap.fromTo(
         listViewRef.current,
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
       );
-
-      if (cardRef.current) {
-        gsap.fromTo(
-          cardRef.current,
-          { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
-        );
-      }
     }
   }, [selectedProjectId]);
 

@@ -13,8 +13,10 @@ import OthersTab from "@/components/tabs/OthersTab";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabKey>("home");
+  const [displayedTab, setDisplayedTab] = useState<TabKey>("home");
   const tabContentRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const isTransitioningRef = useRef(false);
 
   // Global Scroll Progress Bar
   useEffect(() => {
@@ -36,29 +38,58 @@ export default function Home() {
         tw.kill();
       };
     }
-  }, [activeTab]);
+  }, [displayedTab]);
 
   const handleTabChange = (newTab: TabKey) => {
     if (newTab === activeTab) return;
 
+    // 1. Immediately update activeTab so SideNav indicator starts gliding at t = 0ms
     setActiveTab(newTab);
-    window.scrollTo({ top: 0, behavior: "smooth" });
 
-    if (tabContentRef.current) {
-      gsap.fromTo(
-        tabContentRef.current,
-        { opacity: 0, y: 12 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.28,
-          ease: "power2.out",
-          onComplete: () => {
-            ScrollTrigger.refresh();
-          },
-        }
-      );
+    const el = tabContentRef.current;
+    if (!el) {
+      setDisplayedTab(newTab);
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
     }
+
+    // Kill any ongoing tweens on tab content
+    gsap.killTweensOf(el);
+    isTransitioningRef.current = true;
+
+    // 2. Rapid Exit Fade (0.14s)
+    gsap.to(el, {
+      opacity: 0,
+      y: -6,
+      duration: 0.14,
+      ease: "power2.in",
+      onComplete: () => {
+        // Reset scroll position cleanly to top
+        window.scrollTo({ top: 0, behavior: "instant" });
+
+        // Switch displayed tab in DOM
+        setDisplayedTab(newTab);
+
+        // 3. Smooth Entrance Glide (0.28s)
+        requestAnimationFrame(() => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 10 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.28,
+              ease: "power2.out",
+              clearProps: "all",
+              onComplete: () => {
+                isTransitioningRef.current = false;
+                ScrollTrigger.refresh();
+              },
+            }
+          );
+        });
+      },
+    });
   };
 
   const handleNavigateToContact = () => {
@@ -87,13 +118,13 @@ export default function Home() {
         <Header />
 
         <main ref={tabContentRef} className="flex-1 w-full">
-          {activeTab === "home" && (
+          {displayedTab === "home" && (
             <HomeTab onNavigateToContact={handleNavigateToContact} />
           )}
-          {activeTab === "portfolio" && <PortfolioTab />}
-          {activeTab === "about" && <AboutTab />}
-          {activeTab === "contact" && <ContactTab />}
-          {activeTab === "others" && <OthersTab />}
+          {displayedTab === "portfolio" && <PortfolioTab />}
+          {displayedTab === "about" && <AboutTab />}
+          {displayedTab === "contact" && <ContactTab />}
+          {displayedTab === "others" && <OthersTab />}
         </main>
       </div>
 
