@@ -110,3 +110,23 @@
 .marquee-container:hover .animate-marquee-right {
   animation-play-state: paused;
 }
+
+
+/* Continuous Harmonic Pill Wave (Strictly bounded [0, -4px], zero drift) */
+@keyframes pillWave {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-pill-wave {
+  animation: pillWave 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-pill-wave:hover {
+  animation-play-state: paused;
+}

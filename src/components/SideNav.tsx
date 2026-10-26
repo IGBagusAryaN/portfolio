@@ -3,11 +3,12 @@
 import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import {
-  FolderIcon,
-  UserIcon,
-  MailIcon,
-  GridIcon,
-} from "@needui/ui-kit";
+  Home,
+  FolderGit2,
+  User,
+  Mail,
+  LayoutGrid,
+} from "lucide-react";
 import { TabKey } from "./Header";
 import ThemeToggle from "./ThemeToggle";
 
@@ -27,60 +28,51 @@ const NAV_ITEMS: NavItem[] = [
   {
     key: "home",
     label: "Home",
-    icon: (
-      <svg
-        className="w-4 h-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
-        <polyline points="9 21 9 12 15 12 15 21" />
-      </svg>
-    ),
+    icon: <Home size={18} strokeWidth={2} />,
   },
   {
     key: "portfolio",
     label: "Portfolio",
-    icon: <FolderIcon size={16} />,
+    icon: <FolderGit2 size={18} strokeWidth={2} />,
   },
   {
     key: "about",
     label: "About",
-    icon: <UserIcon size={16} />,
+    icon: <User size={18} strokeWidth={2} />,
   },
   {
     key: "contact",
     label: "Contact",
-    icon: <MailIcon size={16} />,
+    icon: <Mail size={18} strokeWidth={2} />,
   },
   {
     key: "others",
     label: "Others",
-    icon: <GridIcon size={16} />,
+    icon: <LayoutGrid size={18} strokeWidth={2} />,
   },
 ];
 
 export default function SideNav({ activeTab, setActiveTab, isMobile = false }: SideNavProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<{ [key in TabKey]?: HTMLButtonElement | null }>({});
 
-  // Slide active indicator to the exact offset coordinate of active button
+  // Slide active indicator to the exact viewport coordinate of active button relative to container
   const updateIndicator = useCallback(
     (instant = false) => {
       const activeBtn = buttonRefs.current[activeTab];
+      const container = containerRef.current;
       const indicator = indicatorRef.current;
 
-      if (!activeBtn || !indicator) return;
+      if (!activeBtn || !container || !indicator) return;
 
-      const top = activeBtn.offsetTop;
-      const left = activeBtn.offsetLeft;
-      const width = activeBtn.offsetWidth;
-      const height = activeBtn.offsetHeight;
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      const top = btnRect.top - containerRect.top;
+      const left = btnRect.left - containerRect.left;
+      const width = btnRect.width;
+      const height = btnRect.height;
 
       gsap.to(indicator, {
         x: left,
@@ -88,7 +80,7 @@ export default function SideNav({ activeTab, setActiveTab, isMobile = false }: S
         width,
         height,
         opacity: 1,
-        duration: instant ? 0 : 0.3,
+        duration: instant ? 0 : 0.28,
         ease: "power2.out",
       });
     },
@@ -97,8 +89,15 @@ export default function SideNav({ activeTab, setActiveTab, isMobile = false }: S
 
   useEffect(() => {
     updateIndicator(true);
-    const timer = setTimeout(() => updateIndicator(), 100);
+    const timer = setTimeout(() => updateIndicator(false), 80);
     return () => clearTimeout(timer);
+  }, [updateIndicator]);
+
+  // Recalculate on window resize
+  useEffect(() => {
+    const handleResize = () => updateIndicator(true);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [updateIndicator]);
 
   // Entrance animation on mount
@@ -106,51 +105,28 @@ export default function SideNav({ activeTab, setActiveTab, isMobile = false }: S
     if (containerRef.current) {
       gsap.fromTo(
         containerRef.current,
-        { opacity: 0, y: isMobile ? 15 : 0, x: isMobile ? 0 : -15 },
-        { opacity: 1, y: 0, x: 0, duration: 0.45, ease: "power2.out", delay: 0.1 }
+        { opacity: 0, y: isMobile ? 16 : 0, x: isMobile ? 0 : -16 },
+        { opacity: 1, y: 0, x: 0, duration: 0.4, ease: "power2.out", delay: 0.05 }
       );
     }
   }, [isMobile]);
-
-  // Magnetic hover effects on icons
-  const handleNavMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const target = e.currentTarget;
-    const rect = target.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) * 0.35;
-    const y = (e.clientY - rect.top - rect.height / 2) * 0.35;
-
-    gsap.to(target, {
-      x,
-      y,
-      duration: 0.25,
-      ease: "power2.out",
-    });
-  };
-
-  const handleNavMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    gsap.to(e.currentTarget, {
-      x: 0,
-      y: 0,
-      duration: 0.6,
-      ease: "elastic.out(1, 0.4)",
-    });
-  };
 
   return (
     <aside
       ref={containerRef}
       aria-label="Sidebar Navigation"
-      className={`relative select-none flex items-center p-1.5 rounded-2xl border border-neutral-200/90 dark:border-neutral-800/90 bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md shadow-lg transition-all duration-300 ${
+      className={`relative select-none flex items-center p-1.5 rounded-2xl border border-neutral-200/90 dark:border-neutral-700/80 bg-white/95 dark:bg-[#18181b]/95 backdrop-blur-xl shadow-xl dark:shadow-2xl dark:shadow-black/70 ring-1 ring-black/[0.04] dark:ring-white/[0.06] transition-all duration-300 ${
         isMobile ? "flex-row gap-1" : "flex-col gap-1.5"
       }`}
     >
-      {/* Sliding Active Indicator Pill - Starts at (0,0), placed exactly over the button */}
+      {/* Sliding Active Indicator Pill */}
       <div
         ref={indicatorRef}
-        className="absolute top-0 left-0 rounded-xl bg-neutral-950 dark:bg-white shadow-sm pointer-events-none opacity-0"
+        className="absolute top-0 left-0 rounded-xl bg-neutral-900 dark:bg-white shadow-md pointer-events-none opacity-0"
+        style={{ willChange: "transform, width, height" }}
       />
 
-      {/* Navigation Icons from @needui/ui-kit */}
+      {/* Navigation Icons */}
       <div className={`flex items-center ${isMobile ? "flex-row gap-1" : "flex-col gap-1.5"}`}>
         {NAV_ITEMS.map((item) => {
           const isActive = activeTab === item.key;
@@ -161,23 +137,21 @@ export default function SideNav({ activeTab, setActiveTab, isMobile = false }: S
                   buttonRefs.current[item.key] = el;
                 }}
                 onClick={() => setActiveTab(item.key)}
-                onMouseMove={handleNavMouseMove}
-                onMouseLeave={handleNavMouseLeave}
                 aria-label={item.label}
-                className={`relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center p-0 transition-colors duration-200 cursor-pointer ${
+                className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center p-0 transition-colors duration-200 cursor-pointer ${
                   isActive
-                    ? "text-white dark:text-neutral-950 font-bold"
-                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                    ? "text-white dark:text-neutral-950 font-semibold"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/70 dark:hover:bg-neutral-800/60"
                 }`}
               >
-                <span className="flex items-center justify-center w-full h-full">
+                <span className="flex items-center justify-center w-full h-full pointer-events-none transition-transform duration-200 group-hover:scale-105">
                   {item.icon}
                 </span>
               </button>
 
-              {/* Tooltip Label (Appears to the RIGHT on Desktop, ABOVE on Mobile) */}
+              {/* Tooltip Label (Right on Desktop, Top on Mobile) */}
               <div
-                className={`absolute pointer-events-none opacity-0 transition-all duration-200 z-50 ${
+                className={`absolute pointer-events-none opacity-0 transition-all duration-150 z-50 ${
                   isMobile
                     ? "bottom-full mb-2.5 left-1/2 -translate-x-1/2 group-hover:opacity-100 group-hover:-translate-y-1"
                     : "left-full ml-3 top-1/2 -translate-y-1/2 group-hover:opacity-100 group-hover:translate-x-1"
@@ -196,14 +170,14 @@ export default function SideNav({ activeTab, setActiveTab, isMobile = false }: S
       <div
         className={`${
           isMobile ? "w-[1px] h-5 mx-1" : "w-5 h-[1px] my-1"
-        } bg-neutral-200 dark:bg-neutral-800`}
+        } bg-neutral-200 dark:bg-neutral-700/80`}
       />
 
       {/* Theme Toggle Button */}
       <div className="relative z-10 flex items-center justify-center group">
         <ThemeToggle />
         <div
-          className={`absolute pointer-events-none opacity-0 transition-all duration-200 z-50 ${
+          className={`absolute pointer-events-none opacity-0 transition-all duration-150 z-50 ${
             isMobile
               ? "bottom-full mb-2.5 left-1/2 -translate-x-1/2 group-hover:opacity-100 group-hover:-translate-y-1"
               : "left-full ml-3 top-1/2 -translate-y-1/2 group-hover:opacity-100 group-hover:translate-x-1"

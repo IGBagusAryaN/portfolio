@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import gsap from "gsap";
-import { SunIcon, MoonIcon } from "@needui/ui-kit";
+import { Sun, Moon } from "lucide-react";
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
@@ -10,16 +10,30 @@ export default function ThemeToggle() {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const updateTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      setIsDark(isDarkMode);
+    };
+
     const saved = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     if (saved === "dark" || (!saved && prefersDark)) {
       document.documentElement.classList.add("dark");
-      setIsDark(true);
     } else {
       document.documentElement.classList.remove("dark");
-      setIsDark(false);
     }
+    updateTheme();
+    setMounted(true);
+
+    const observer = new MutationObserver(() => {
+      updateTheme();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const toggleTheme = () => {
@@ -33,19 +47,17 @@ export default function ThemeToggle() {
       });
     }
 
-    if (isDark) {
+    if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
-      setIsDark(false);
     } else {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
-      setIsDark(true);
     }
   };
 
   if (!mounted) {
-    return <div className="w-9 h-9 sm:w-10 sm:h-10" />;
+    return <div className="w-10 h-10" />;
   }
 
   return (
@@ -53,13 +65,13 @@ export default function ThemeToggle() {
       ref={btnRef}
       onClick={toggleTheme}
       aria-label="Toggle Dark Mode"
-      className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/80 dark:hover:bg-neutral-800/70 transition-colors active:scale-90 cursor-pointer focus:outline-none flex items-center justify-center p-0"
+      className="w-10 h-10 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition-colors active:scale-95 cursor-pointer focus:outline-none flex items-center justify-center p-0"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
-        <SunIcon size={16} className="text-neutral-200 transition-transform duration-300 hover:rotate-45" />
+        <Sun size={18} strokeWidth={2} className="text-amber-400 transition-transform duration-300 hover:rotate-45" />
       ) : (
-        <MoonIcon size={16} className="text-neutral-950 transition-transform duration-300 hover:-rotate-12 fill-neutral-950" />
+        <Moon size={18} strokeWidth={2} className="text-neutral-700 transition-transform duration-300 hover:-rotate-12" />
       )}
     </button>
   );

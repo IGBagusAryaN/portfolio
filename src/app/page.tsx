@@ -41,35 +41,27 @@ export default function Home() {
   const handleTabChange = (newTab: TabKey) => {
     if (newTab === activeTab) return;
 
-    if (tabContentRef.current) {
-      // Smooth fade-out before switching tab
-      gsap.to(tabContentRef.current, {
-        opacity: 0,
-        y: -10,
-        duration: 0.18,
-        ease: "power2.in",
-        onComplete: () => {
-          setActiveTab(newTab);
-          // Refresh scroll triggers after tab switch
-          setTimeout(() => {
-            ScrollTrigger.refresh();
-          }, 50);
+    setActiveTab(newTab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-          // Smooth fade-in of new tab content
-          gsap.fromTo(
-            tabContentRef.current,
-            { opacity: 0, y: 15 },
-            { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
-          );
-        },
-      });
-    } else {
-      setActiveTab(newTab);
+    if (tabContentRef.current) {
+      gsap.fromTo(
+        tabContentRef.current,
+        { opacity: 0, y: 12 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.28,
+          ease: "power2.out",
+          onComplete: () => {
+            ScrollTrigger.refresh();
+          },
+        }
+      );
     }
   };
 
   const handleNavigateToContact = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     handleTabChange("contact");
   };
 
@@ -85,8 +77,8 @@ export default function Home() {
 
       {/* Main Container - Extended Width (max-w-4xl) */}
       <div className="relative z-10 max-w-4xl lg:max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 pt-6 sm:pt-8 pb-10 md:pb-12 flex flex-col min-h-screen">
-        {/* Desktop/Tablet Left Sidebar - Aligned with Header and strictly anchored to container's left edge */}
-        <div className="hidden sm:block absolute right-full top-0 mr-4 lg:mr-5 h-full pointer-events-none">
+        {/* Desktop Left Sidebar - Aligned with Header and strictly anchored to container's left edge */}
+        <div className="hidden lg:block absolute right-full top-0 mr-4 lg:mr-5 h-full pointer-events-none">
           <div className="sticky top-6 sm:top-8 pointer-events-auto">
             <SideNav activeTab={activeTab} setActiveTab={handleTabChange} />
           </div>
@@ -105,8 +97,8 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Mobile Screen: Floating Bottom Icon Dock */}
-      <div className="sm:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
+      {/* Mobile & Tablet Screen: Floating Bottom Icon Dock */}
+      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
         <SideNav activeTab={activeTab} setActiveTab={handleTabChange} isMobile />
       </div>
     </>

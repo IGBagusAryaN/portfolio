@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
 export type TabKey = "home" | "portfolio" | "about" | "contact" | "others";
@@ -53,13 +54,17 @@ export default function Header() {
   return (
     <header className="relative mb-5 sm:mb-6 pb-4 sm:pb-5 border-b border-notion-border/80 dark:border-notion-darkBorder/80">
       <div className="flex items-center gap-3.5 sm:gap-4.5">
-        {/* User Profile Avatar - Rounded Squircle */}
+        {/* User Profile Avatar - High Resolution Normal Framing */}
         <div className="relative shrink-0">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border border-neutral-200 dark:border-neutral-800 shadow-sm bg-neutral-100 dark:bg-neutral-900 transition-transform duration-300 hover:scale-[1.02]">
-            <img
-              src="/arya-avatar.jpeg"
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border border-neutral-200/90 dark:border-neutral-700/80 shadow-md bg-neutral-100 dark:bg-neutral-800 ring-1 ring-black/[0.04] dark:ring-white/[0.08] transition-transform duration-300 hover:scale-[1.03]">
+            <Image
+              src="/arya-avatar.jpg"
               alt="I Gede Bagus Arya Negara"
-              className="w-full h-full object-cover object-top"
+              width={200}
+              height={200}
+              quality={100}
+              priority
+              className="w-full h-full object-cover object-center"
             />
           </div>
         </div>
