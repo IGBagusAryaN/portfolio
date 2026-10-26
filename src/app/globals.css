@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::selection {
+  background-color: #1c1917;
+  color: #fafaf9;
+}
+.dark ::selection {
+  background-color: #f4f4f5;
+  color: #0f0f11;
+}
+
+/* Subtle background grid pattern */
+.bg-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+.dark .bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+
+/* Word split styling for ScrollTrigger reveal */
+.bio-word {
+  display: inline-block;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+/* Rolling button effect */
+.btn-roll-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+}
+.btn-roll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-roll-container:hover .btn-roll-inner {
+  transform: translateY(-50%);
+}
+
+/* Subtle waving animation for greeting emoji */
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  20%, 60% { transform: rotate(14deg); }
+  40%, 80% { transform: rotate(-8deg); }
+}
+.animate-wave {
+  animation: wave 2.5s infinite;
+  transform-origin: bottom right;
+}
+
+/* Minimal Rocket Engine Thrust animation */
+@keyframes thrustGlow {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.9); }
+  50% { opacity: 0.8; transform: scaleY(1.15); }
+}
+.thrust-pulse {
+  transform-origin: top center;
+  animation: thrustGlow 1.8s ease-in-out infinite;
+}
+
+/* Infinite Looping Marquee for Tech Stack */
+@keyframes marquee-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-right 32s linear infinite;
+  will-change: transform;
+}
+
+.marquee-container:hover .animate-marquee-left,
+.marquee-container:hover .animate-marquee-right {
+  animation-play-state: paused;
+}
