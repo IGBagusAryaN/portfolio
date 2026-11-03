@@ -45,21 +45,6 @@
   transition: color 0.15s ease, opacity 0.15s ease;
 }
 
-/* Rolling button effect */
-.btn-roll-container {
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-}
-.btn-roll-inner {
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.btn-roll-container:hover .btn-roll-inner {
-  transform: translateY(-50%);
-}
-
 /* Subtle waving animation for greeting emoji */
 @keyframes wave {
   0%, 100% { transform: rotate(0deg); }
@@ -111,7 +96,6 @@
   animation-play-state: paused;
 }
 
-
 /* Continuous Harmonic Pill Wave (Strictly bounded [0, -4px], zero drift) */
 @keyframes pillWave {
   0%, 100% {
@@ -129,4 +113,77 @@
 
 .animate-pill-wave:hover {
   animation-play-state: paused;
+}
+
+/* CV Card Dynamic Animations */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-160%);
+  }
+  60%, 100% {
+    transform: translateX(280%);
+  }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmerSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-float-soft {
+  animation: floatSoft 2.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.animate-arrow-bounce {
+  animation: arrowBounce 1.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes borderGlowPulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.995);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.008);
+  }
+}
+
+.animate-border-glow {
+  animation: borderGlowPulse 3.6s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+@keyframes radarRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.animate-radar-ring {
+  animation: radarRing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }

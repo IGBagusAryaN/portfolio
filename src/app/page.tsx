@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header, { TabKey } from "@/components/Header";
-import SideNav from "@/components/SideNav";
+import BottomNav from "@/components/BottomNav";
 import HomeTab from "@/components/tabs/HomeTab";
 import PortfolioTab from "@/components/tabs/PortfolioTab";
 import AboutTab from "@/components/tabs/AboutTab";
@@ -43,7 +43,7 @@ export default function Home() {
   const handleTabChange = (newTab: TabKey) => {
     if (newTab === activeTab) return;
 
-    // 1. Immediately update activeTab so SideNav indicator starts gliding at t = 0ms
+    // 1. Immediately update activeTab so BottomNav indicator starts gliding at t = 0ms
     setActiveTab(newTab);
 
     const el = tabContentRef.current;
@@ -107,14 +107,7 @@ export default function Home() {
       </div>
 
       {/* Main Container - Extended Width (max-w-4xl) */}
-      <div className="relative z-10 max-w-4xl lg:max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 pt-6 sm:pt-8 pb-10 md:pb-12 flex flex-col min-h-screen">
-        {/* Desktop Left Sidebar - Aligned with Header and strictly anchored to container's left edge */}
-        <div className="hidden lg:block absolute right-full top-0 mr-4 lg:mr-5 h-full pointer-events-none">
-          <div className="sticky top-6 sm:top-8 pointer-events-auto">
-            <SideNav activeTab={activeTab} setActiveTab={handleTabChange} />
-          </div>
-        </div>
-
+      <div className="relative z-10 max-w-4xl lg:max-w-4xl mx-auto px-6 sm:px-10 lg:px-12 pt-6 sm:pt-8 pb-28 sm:pb-32 flex flex-col min-h-screen">
         <Header />
 
         <main ref={tabContentRef} className="flex-1 w-full">
@@ -128,10 +121,8 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Mobile & Tablet Screen: Floating Bottom Icon Dock */}
-      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
-        <SideNav activeTab={activeTab} setActiveTab={handleTabChange} isMobile />
-      </div>
+      {/* Floating Bottom Navigation Bar (Desktop, Tablet & Mobile) */}
+      <BottomNav activeTab={activeTab} setActiveTab={handleTabChange} />
     </>
   );
 }

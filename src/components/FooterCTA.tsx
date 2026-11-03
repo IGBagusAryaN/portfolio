@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
 import Rocket from "./Rocket";
 
 interface FooterCTAProps {
@@ -93,32 +94,11 @@ export default function FooterCTA({ onNavigateToContact }: FooterCTAProps) {
     }
   };
 
-  const handleBtnMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
-    const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
-
-    gsap.to(e.currentTarget, {
-      x,
-      y,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  const handleBtnMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    gsap.to(e.currentTarget, {
-      x: 0,
-      y: 0,
-      duration: 0.5,
-      ease: "elastic.out(1, 0.4)",
-    });
-  };
-
   const handleContactClick = () => {
     if (btnRef.current) {
-      gsap.timeline()
-        .to(btnRef.current, { scale: 0.94, duration: 0.12 })
+      gsap
+        .timeline()
+        .to(btnRef.current, { scale: 0.95, duration: 0.1 })
         .to(btnRef.current, { scale: 1, duration: 0.2, ease: "power2.out" })
         .call(() => {
           if (onNavigateToContact) {
@@ -140,11 +120,11 @@ export default function FooterCTA({ onNavigateToContact }: FooterCTAProps) {
         ref={sectionRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="scroll-mt-24 pt-6 border-t border-notion-border/70 dark:border-notion-darkBorder/70"
+        className="scroll-mt-24 pt-6 border-t border-neutral-200/80 dark:border-neutral-800"
       >
         <div
           ref={cardRef}
-          className="relative overflow-hidden rounded-2xl border border-notion-border dark:border-notion-darkBorder bg-gradient-to-b from-white/90 to-neutral-50/50 dark:from-neutral-900/80 dark:to-neutral-950/60 p-8 sm:p-12 shadow-sm"
+          className="relative overflow-hidden rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-white/75 dark:bg-neutral-900/60 backdrop-blur-sm p-8 sm:p-12 shadow-xs transition-colors hover:border-neutral-300 dark:hover:border-neutral-700"
         >
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
             <div className="space-y-3 max-w-md">
@@ -154,43 +134,34 @@ export default function FooterCTA({ onNavigateToContact }: FooterCTAProps) {
               <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 font-mono">
                 What I've Been Up To
               </h3>
-              <p className="text-sm sm:text-base text-notion-muted dark:text-notion-darkMuted leading-relaxed">
+              <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
                 I'm looking for collaboration in Frontend Development! Let's connect!
               </p>
 
-              {/* Contact Button triggering Tab Switch to Contact */}
+              {/* Clean & Elevated Contact Button */}
               <div className="pt-2">
                 <button
                   ref={btnRef}
                   onClick={handleContactClick}
-                  onMouseMove={handleBtnMouseMove}
-                  onMouseLeave={handleBtnMouseLeave}
-                  className="group relative inline-flex items-center gap-3 px-6 py-3 rounded-full text-xs sm:text-sm font-mono font-medium text-white dark:text-neutral-900 bg-neutral-900 dark:bg-white overflow-hidden shadow-sm transition-all duration-300 hover:shadow-lg active:scale-95 cursor-pointer"
+                  className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-xs sm:text-sm font-mono font-semibold text-white dark:text-neutral-900 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-100 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-neutral-950/15 dark:hover:shadow-white/10 transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
                 >
-                  {/* Sweeping overlay on hover */}
-                  <span className="absolute inset-0 bg-neutral-800 dark:bg-neutral-200 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-none" />
+                  {/* Specular Shimmer Sweep on Hover */}
+                  <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 dark:via-black/10 to-transparent -translate-x-full group-hover:translate-x-[300%] transition-transform duration-700 ease-out pointer-events-none" />
 
-                  {/* Rolling Text Container */}
-                  <span className="relative z-10 btn-roll-container h-[18px]">
-                    <span className="btn-roll-inner">
-                      <span>Contact me</span>
-                      <span>Go to Contact ↗</span>
-                    </span>
+                  {/* Pulsing Active Radar Indicator */}
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                   </span>
 
-                  {/* Arrow Icon */}
-                  <svg
-                    className="relative z-10 w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="7" y1="17" x2="17" y2="7" />
-                    <polyline points="7 7 17 7 17 17" />
-                  </svg>
+                  {/* Clean Text Label */}
+                  <span className="relative z-10 select-none">Contact me</span>
+
+                  {/* Smooth Sliding Arrow */}
+                  <ArrowUpRight
+                    size={15}
+                    className="relative z-10 transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0"
+                  />
                 </button>
               </div>
             </div>
@@ -206,7 +177,7 @@ export default function FooterCTA({ onNavigateToContact }: FooterCTAProps) {
       {/* Others Section */}
       <section
         id="others"
-        className="scroll-mt-24 pt-4 border-t border-notion-border/70 dark:border-notion-darkBorder/70 text-xs font-mono text-neutral-400 dark:text-neutral-500 flex flex-col sm:flex-row justify-between items-center gap-4 pb-12"
+        className="scroll-mt-24 pt-4 border-t border-neutral-200/80 dark:border-neutral-800 text-xs font-mono text-neutral-400 dark:text-neutral-500 flex flex-col sm:flex-row justify-between items-center gap-4 pb-12"
       >
         <div>
           <span>

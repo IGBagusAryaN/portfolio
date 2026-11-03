@@ -11,6 +11,7 @@
   "dependencies": {
     "@needui/ui-kit": "^0.1.14",
     "clsx": "^2.1.1",
+    "framer-motion": "^14.8.0",
     "gsap": "^3.12.5",
     "lucide-react": "^0.453.0",
     "next": "^14.2.15",

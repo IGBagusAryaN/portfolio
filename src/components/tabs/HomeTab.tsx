@@ -2,6 +2,7 @@
 
 import Bio from "@/components/Bio";
 import Skills from "@/components/Skills";
+import CareerHighlights from "@/components/CareerHighlights";
 import FooterCTA from "@/components/FooterCTA";
 
 interface HomeTabProps {
@@ -10,9 +11,10 @@ interface HomeTabProps {
 
 export default function HomeTab({ onNavigateToContact }: HomeTabProps) {
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-8 sm:space-y-10">
       <Bio />
       <Skills />
+      <CareerHighlights />
       <FooterCTA onNavigateToContact={onNavigateToContact} />
     </div>
   );
